@@ -1,5 +1,6 @@
 import request from "supertest";
 import app from "../app.js";
+import { sequelize } from "../database/models/index.js";
 
 describe("Users API", () => {
     let createdUserId;
@@ -44,6 +45,14 @@ describe("Users API", () => {
         }
     };
 
+    beforeAll(async () => {
+        await sequelize.sync();
+    });
+
+    afterAll(async () => {
+        await sequelize.close();
+    });
+
     it("GET /api/users returns users", async () => {
         const res = await request(app).get("/api/users");
         expect(res.statusCode).toBe(200);
@@ -65,7 +74,7 @@ describe("Users API", () => {
         expect(res.statusCode).toBe(400);
     });
 
-    it("PUT /api/users/:id updates a user", async () => {
+    it("PUT /api/users/:id updates the created user", async () => {
         const res = await request(app).put(`/api/users/${createdUserId}`).send(updatedUser);
 
         expect(res.statusCode).toBe(200);
@@ -80,12 +89,12 @@ describe("Users API", () => {
 
     it("PUT /api/users/:id for non-existent user returns 404", async () => {
         const res = await request(app).put(`/api/users/999999`).send(updatedUser);
-        expect([404, 400]).toContain(res.statusCode);
+        expect(res.statusCode).toBe(404);
     });
 
-    it("DELETE /api/users/:id deletes a user", async () => {
+    it("DELETE /api/users/:id deletes the created user", async () => {
         const res = await request(app).delete(`/api/users/${createdUserId}`);
-        expect([204, 200]).toContain(res.statusCode);
+        expect(res.statusCode).toBe(204);
 
         const getRes = await request(app).get("/api/users");
         const exists = getRes.body.some(u => u.id === createdUserId);
@@ -99,6 +108,6 @@ describe("Users API", () => {
 
     it("DELETE /api/users/:id for non-existent user returns 404", async () => {
         const res = await request(app).delete("/api/users/999999");
-        expect([404, 400]).toContain(res.statusCode);
+        expect(res.statusCode).toBe(404);
     });
 });

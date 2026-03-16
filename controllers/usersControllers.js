@@ -60,7 +60,7 @@ export const deleteUser = async (req, res) => {
 
         const deleted = await userService.deleteUser(userId);
         if (!deleted) return res.status(404).json({ message: "User not found." });
-        res.status(204).send({ message: "User deleted." });
+        res.status(204).send();
     } catch (err) {
         console.error(err)
         res.status(500).json({ message: "Internal server error!" });
