@@ -115,6 +115,30 @@ Creates a new user.
 }
 ```
 
+**Response 201**
+```json
+{
+  "id": 1,
+  "name": "John Doe",
+  "username": "johndoe",
+  "email": "john@example.com",
+  "phone": "123-456-7890",
+  "website": "johndoe.com",
+  "address": {
+    "street": "Main St",
+    "suite": "Apt 1",
+    "city": "Springfield",
+    "zipcode": "12345",
+    "geo": { "lat": "40.7128", "lng": "-74.0060" }
+  },
+  "company": {
+    "name": "Acme Corp",
+    "catchPhrase": "Making things work",
+    "bs": "synergize scalable solutions"
+  }
+}
+```
+
 **Responses**
 - `201` User created successfully
 - `400` Invalid or missing fields
